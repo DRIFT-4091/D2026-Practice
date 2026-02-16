@@ -2,11 +2,16 @@
 
 This document provides instructions for copying all code from the D2026-Practice repository to the D2026-Regional repository via a pull request.
 
+## Overview
+
+This process will synchronize all code, configuration files, and dependencies from D2026-Practice to D2026-Regional. The recommended approach is to use the provided automated script, but manual steps are also documented below.
+
 ## Prerequisites
 
 - Git installed on your machine
-- Access to both repositories (DRIFT-4091/D2026-Practice and DRIFT-4091/D2026-Regional)
-- GitHub CLI (`gh`) or ability to create PRs through the GitHub web interface
+- Access to both repositories (DRIFT-4091/D2026-Practice and DRIFT-4091/D2026-Regional)  
+- Push access to the D2026-Regional repository
+- GitHub CLI (`gh`) installed (optional, for automated PR creation)
 
 ## Method 1: Using Git Commands
 
@@ -59,13 +64,29 @@ gh pr create --title "Sync code from D2026-Practice" --body "This PR copies all 
 # Or push and create PR through GitHub web interface
 ```
 
-## Method 2: Using the Copy Script
+## Method 2: Using the Copy Script (Recommended)
 
-Run the provided `copy_to_regional.sh` script which automates the above steps:
+The provided `copy_to_regional.sh` script automates the entire process:
 
 ```bash
+# Make the script executable (if not already)
+chmod +x copy_to_regional.sh
+
+# Run the script
 ./copy_to_regional.sh
+
+# Or specify a different source branch (default is 'main')
+./copy_to_regional.sh <branch-name>
 ```
+
+The script will:
+1. Clone the D2026-Regional repository to a temporary directory
+2. Clone the D2026-Practice repository  
+3. Copy all files (excluding .git directory)
+4. Create a new branch with timestamp
+5. Commit all changes
+6. Push the branch to D2026-Regional
+7. Attempt to create a PR using GitHub CLI (if available)
 
 ## Files to be Copied
 
@@ -85,8 +106,30 @@ The following files and directories will be copied from D2026-Practice:
 - `WPILib-License.md` - License file
 - `README.md` - Documentation (may need manual review)
 
-## Notes
+## What Gets Copied
 
-- The README.md file may need manual review and editing after the copy, as it currently describes the Practice repository
-- Ensure all team members are aware of this sync operation
-- Review the PR carefully before merging to ensure no unintended changes
+All files and directories from D2026-Practice will be copied to D2026-Regional, including:
+
+- Source code (`src/`)
+- Build configuration (`build.gradle`, `settings.gradle`)  
+- Vendor dependencies (`vendordeps/`)
+- IDE settings (`.vscode/`, `.wpilib/`)
+- GitHub workflows (`.github/`)
+- Gradle wrapper (`gradle/`, `gradlew`, `gradlew.bat`)
+- Project configuration (`tuner-project.json`)
+- Documentation (README.md, licenses, etc.)
+
+**Note**: The script in D2026-Practice (COPY_TO_REGIONAL.md and copy_to_regional.sh) will NOT be copied to avoid confusion.
+
+## Important Notes
+
+- **Review the README.md**: After copying, you should review and update the README.md in D2026-Regional as it will initially describe the Practice repository
+- **Team Communication**: Ensure all team members are aware of this sync operation before merging
+- **Careful Review**: Review the PR carefully before merging to ensure no unintended changes
+- **Testing**: After merging, test the code in D2026-Regional to ensure everything works as expected
+
+## Troubleshooting
+
+- If you don't have push access to D2026-Regional, contact a repository administrator
+- If the GitHub CLI is not installed, you can create the PR manually through the GitHub web interface after the script pushes the branch
+- If the script fails, check that you have network access to GitHub and that both repositories exist
