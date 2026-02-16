@@ -41,7 +41,7 @@ PRACTICE_BRANCH=${1:-main}
 echo "Step 4: Copying files from practice/$PRACTICE_BRANCH..."
 
 # Use git to extract the tree from practice branch to a temp location
-TEMP_EXTRACT="/tmp/practice-extract-$$"
+TEMP_EXTRACT=$(mktemp -d)
 mkdir -p "$TEMP_EXTRACT"
 cd "$TEMP_EXTRACT"
 git clone --depth 1 --branch "$PRACTICE_BRANCH" "$PRACTICE_REPO" extracted
@@ -57,7 +57,7 @@ rm -rf "$TEMP_EXTRACT"
 
 # Step 5: Commit changes
 echo "Step 5: Committing changes..."
-git add -A
+git add .
 git commit -m "Sync all code from D2026-Practice repository
 
 This commit copies all code from the D2026-Practice repository.
