@@ -52,13 +52,12 @@ echo "Step 4: Copying files from practice/$PRACTICE_BRANCH..."
 
 # Use git to extract the tree from practice branch to a temp location
 TEMP_EXTRACT=$(mktemp -d)
+git clone --depth 1 --branch "$PRACTICE_BRANCH" "$PRACTICE_REPO" "$TEMP_EXTRACT"
 cd "$TEMP_EXTRACT"
-git clone --depth 1 --branch "$PRACTICE_BRANCH" "$PRACTICE_REPO" extracted
-cd extracted
 
 # Copy all files except .git to the Regional repo
 echo "Copying files..."
-rsync -av --exclude='.git' --exclude='COPY_TO_REGIONAL.md' --exclude='copy_to_regional.sh' ./ "$TEMP_DIR/"
+rsync -a --exclude='.git' --exclude='COPY_TO_REGIONAL.md' --exclude='copy_to_regional.sh' ./ "$TEMP_DIR/"
 
 # Return to Regional repo directory
 cd "$TEMP_DIR"

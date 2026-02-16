@@ -45,6 +45,8 @@ git checkout practice/main -- .
 # git merge --allow-unrelated-histories practice/main
 ```
 
+**Note**: The `git checkout` method above may not copy files that exist in practice/main but are listed in D2026-Regional's .gitignore. For a complete copy that includes all files, use the automated script (Method 2) which uses rsync instead.
+
 ### Step 5: Review and Commit Changes
 
 ```bash
