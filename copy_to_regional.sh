@@ -1,26 +1,36 @@
 #!/bin/bash
 
 # Script to copy all code from D2026-Practice to D2026-Regional via a pull request
-# Usage: ./copy_to_regional.sh
+# Usage: ./copy_to_regional.sh [branch-name]
+#   branch-name: Optional, defaults to 'main'. Specifies which branch of D2026-Practice to copy.
 
 set -e  # Exit on error
-
-echo "=================================="
-echo "Copy D2026-Practice to D2026-Regional"
-echo "=================================="
-echo ""
 
 # Configuration
 REGIONAL_REPO="https://github.com/DRIFT-4091/D2026-Regional.git"
 PRACTICE_REPO="https://github.com/DRIFT-4091/D2026-Practice.git"
 BRANCH_NAME="sync-from-practice-$(date +%Y%m%d-%H%M%S)"
-TEMP_DIR="/tmp/d2026-regional-sync"
+TEMP_DIR=$(mktemp -d)
 
-# Clean up any existing temp directory
-if [ -d "$TEMP_DIR" ]; then
-    echo "Cleaning up existing temp directory..."
-    rm -rf "$TEMP_DIR"
-fi
+# Cleanup function
+cleanup() {
+    if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ]; then
+        echo "Cleaning up temporary directory: $TEMP_DIR"
+        rm -rf "$TEMP_DIR"
+    fi
+    if [ -n "$TEMP_EXTRACT" ] && [ -d "$TEMP_EXTRACT" ]; then
+        echo "Cleaning up extraction directory: $TEMP_EXTRACT"
+        rm -rf "$TEMP_EXTRACT"
+    fi
+}
+
+# Set trap to cleanup on exit
+trap cleanup EXIT
+
+echo "=================================="
+echo "Copy D2026-Practice to D2026-Regional"
+echo "=================================="
+echo ""
 
 # Step 1: Clone D2026-Regional
 echo "Step 1: Cloning D2026-Regional repository..."
@@ -42,7 +52,6 @@ echo "Step 4: Copying files from practice/$PRACTICE_BRANCH..."
 
 # Use git to extract the tree from practice branch to a temp location
 TEMP_EXTRACT=$(mktemp -d)
-mkdir -p "$TEMP_EXTRACT"
 cd "$TEMP_EXTRACT"
 git clone --depth 1 --branch "$PRACTICE_BRANCH" "$PRACTICE_REPO" extracted
 cd extracted
@@ -51,9 +60,8 @@ cd extracted
 echo "Copying files..."
 rsync -av --exclude='.git' --exclude='COPY_TO_REGIONAL.md' --exclude='copy_to_regional.sh' ./ "$TEMP_DIR/"
 
-# Clean up temp extraction
+# Return to Regional repo directory
 cd "$TEMP_DIR"
-rm -rf "$TEMP_EXTRACT"
 
 # Step 5: Commit changes
 echo "Step 5: Committing changes..."
