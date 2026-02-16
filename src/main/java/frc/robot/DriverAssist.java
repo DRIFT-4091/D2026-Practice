@@ -91,7 +91,7 @@ public class DriverAssist {
         } else if (ta >= Constants.TA_VERY_FAR) {
             return Constants.VOLTAGE_FAR + (Constants.TA_FAR - ta) * Constants.SLOPE_FAR_TO_VERY_FAR;
         } else {
-            return Constants.VOLTAGE_VERY_FAR;
+            return Constants.VOLTAGE_MAX;
         }
     }
 
