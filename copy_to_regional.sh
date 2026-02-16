@@ -66,10 +66,13 @@ cd "$TEMP_DIR"
 # Step 5: Commit changes
 echo "Step 5: Committing changes..."
 git add .
-git commit -m "Sync all code from D2026-Practice repository
+
+COMMIT_MSG="Sync all code from D2026-Practice repository
 
 This commit copies all code from the D2026-Practice repository.
 All source files, configurations, and dependencies have been synchronized."
+
+git commit -m "$COMMIT_MSG"
 
 # Step 6: Push branch
 echo "Step 6: Pushing branch to origin..."
@@ -102,5 +105,5 @@ echo ""
 echo "=================================="
 echo "Sync completed successfully!"
 echo "Branch: $BRANCH_NAME"
-echo "Directory: $TEMP_DIR"
+echo "Repository: D2026-Regional"
 echo "=================================="
