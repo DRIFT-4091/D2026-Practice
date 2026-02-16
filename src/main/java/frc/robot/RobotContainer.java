@@ -23,7 +23,8 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
     // Subsystems
     private final CommandSwerveDrivetrain drivetrain;
-    private final Shooter shooter;
+    
+    //private final Shooter shooter;
 
     // Helper classes
     private final DriverAssist driverAssist;
@@ -33,9 +34,13 @@ public class RobotContainer {
     public RobotContainer() {
         // Initialize subsystems
         drivetrain = TunerConstants.createDrivetrain();
-        shooter = new Shooter();
+
+        // No shooter because we are practicing
+
+            // shooter = new Shooter();
 
         // Initialize helper classes
+
         logger = new Telemetry(Constants.MAX_SPEED);
         driverAssist = new DriverAssist();
 
@@ -43,7 +48,7 @@ public class RobotContainer {
         configurePathPlanner();
 
         // Initialize operator interface (configures all bindings)
-        oi = new OI(drivetrain, shooter, driverAssist, logger);
+        oi = new OI(drivetrain, driverAssist, logger);
     }
 
     /**
