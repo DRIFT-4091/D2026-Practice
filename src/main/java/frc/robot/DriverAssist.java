@@ -68,11 +68,12 @@ public class DriverAssist {
     /**
      * Calculates shooter voltage based on Limelight distance to AprilTag.
      *
-     * Distance-to-voltage mapping:
-     * - ta >= 4.0 (very close): 6.0V
-     * - ta = 2.0 (optimal):     9.0V
-     * - ta = 1.0 (far):         11.0V
-     * - ta <= 0.75 (very far):  12.0V
+     * Uses linear interpolation between calibrated distance points:
+     * - ta >= 4.0 (very close):  6.0V
+     * - ta = 2.5 (optimal):      8.0V
+     * - ta = 1.5 (far):         10.0V
+     * - ta = 0.75 (very far):   11.5V
+     * - ta < 0.75 (max range):  12.0V
      */
     public double getShooterVoltageFromLimelight() {
         if (!hasAnyAllianceTarget()) {
@@ -84,11 +85,11 @@ public class DriverAssist {
         if (ta >= Constants.TA_VERY_CLOSE) {
             return Constants.VOLTAGE_VERY_CLOSE;
         } else if (ta >= Constants.TA_OPTIMAL) {
-            return Constants.VOLTAGE_VERY_CLOSE + (Constants.TA_VERY_CLOSE - ta) * (2.0 / 1.5);
+            return Constants.VOLTAGE_VERY_CLOSE + (Constants.TA_VERY_CLOSE - ta) * Constants.SLOPE_VERY_CLOSE_TO_OPTIMAL;
         } else if (ta >= Constants.TA_FAR) {
-            return Constants.VOLTAGE_OPTIMAL + (Constants.TA_OPTIMAL - ta) * (2.0 / 1.0);
+            return Constants.VOLTAGE_OPTIMAL + (Constants.TA_OPTIMAL - ta) * Constants.SLOPE_OPTIMAL_TO_FAR;
         } else if (ta >= Constants.TA_VERY_FAR) {
-            return Constants.VOLTAGE_FAR + (Constants.TA_FAR - ta) * (1.5 / 0.75);
+            return Constants.VOLTAGE_FAR + (Constants.TA_FAR - ta) * Constants.SLOPE_FAR_TO_VERY_FAR;
         } else {
             return Constants.VOLTAGE_VERY_FAR;
         }

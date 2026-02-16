@@ -56,7 +56,7 @@ public final class Constants {
     public static final double READY_RUMBLE = 1.0;
 
     // ---------------- SHOOTER VOLTAGE MAPPING ----------------
-    // Distance-to-voltage mapping breakpoints
+    // Distance-to-voltage mapping breakpoints and interpolation
     public static final double TA_VERY_CLOSE = 4.0;
     public static final double TA_OPTIMAL = 2.5;
     public static final double TA_FAR = 1.5;
@@ -66,4 +66,9 @@ public final class Constants {
     public static final double VOLTAGE_OPTIMAL = 8.0;
     public static final double VOLTAGE_FAR = 10.0;
     public static final double VOLTAGE_VERY_FAR = 12.0;
+
+    // Interpolation slopes (change in voltage per change in ta)
+    public static final double SLOPE_VERY_CLOSE_TO_OPTIMAL = 2.0 / 1.5;  // ta 4.0->2.5: 6V->8V
+    public static final double SLOPE_OPTIMAL_TO_FAR = 2.0 / 1.0;         // ta 2.5->1.5: 8V->10V
+    public static final double SLOPE_FAR_TO_VERY_FAR = 1.5 / 0.75;      // ta 1.5->0.75: 10V->11.5V
 }
