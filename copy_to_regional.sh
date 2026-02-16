@@ -38,17 +38,26 @@ git checkout -b "$BRANCH_NAME"
 
 # Step 4: Get the current branch of practice (usually main)
 PRACTICE_BRANCH=${1:-main}
-echo "Step 4: Checking out files from practice/$PRACTICE_BRANCH..."
+echo "Step 4: Copying files from practice/$PRACTICE_BRANCH..."
 
-# Remove all files except .git
-find . -maxdepth 1 ! -name '.git' ! -name '.' ! -name '..' -exec rm -rf {} +
+# Use git to extract the tree from practice branch to a temp location
+TEMP_EXTRACT="/tmp/practice-extract-$$"
+mkdir -p "$TEMP_EXTRACT"
+cd "$TEMP_EXTRACT"
+git clone --depth 1 --branch "$PRACTICE_BRANCH" "$PRACTICE_REPO" extracted
+cd extracted
 
-# Checkout all files from practice
-git checkout "practice/$PRACTICE_BRANCH" -- .
+# Copy all files except .git to the Regional repo
+echo "Copying files..."
+rsync -av --exclude='.git' --exclude='COPY_TO_REGIONAL.md' --exclude='copy_to_regional.sh' ./ "$TEMP_DIR/"
+
+# Clean up temp extraction
+cd "$TEMP_DIR"
+rm -rf "$TEMP_EXTRACT"
 
 # Step 5: Commit changes
 echo "Step 5: Committing changes..."
-git add .
+git add -A
 git commit -m "Sync all code from D2026-Practice repository
 
 This commit copies all code from the D2026-Practice repository.
