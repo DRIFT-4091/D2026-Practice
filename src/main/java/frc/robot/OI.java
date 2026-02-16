@@ -22,7 +22,10 @@ import frc.robot.subsystems.Shooter;
 public class OI {
     private final CommandPS4Controller joystick;
     private final CommandSwerveDrivetrain drivetrain;
-    private final Shooter shooter;
+
+    // No shooter
+        //private final Shooter shooter;
+
     private final DriverAssist driverAssist;
     private final Telemetry logger;
 
@@ -31,9 +34,9 @@ public class OI {
     private final SwerveRequest.SwerveDriveBrake brake;
     private final SwerveRequest.PointWheelsAt point;
 
-    public OI(CommandSwerveDrivetrain drivetrain, Shooter shooter, DriverAssist driverAssist, Telemetry logger) {
+    public OI(CommandSwerveDrivetrain drivetrain, DriverAssist driverAssist, Telemetry logger) {
         this.drivetrain = drivetrain;
-        this.shooter = shooter;
+        //this.shooter = shooter;
         this.driverAssist = driverAssist;
         this.logger = logger;
         this.joystick = new CommandPS4Controller(Constants.CONTROLLER_PORT);
@@ -56,7 +59,7 @@ public class OI {
     private void configureBindings() {
         configureDefaultCommands();
         configureDrivetrainControls();
-        configureShooterControls();
+       // configureShooterControls();
         configureSysIdControls();
         configureDriverAssist();
         configureRumbleFeedback();
@@ -104,31 +107,31 @@ public class OI {
     /**
      * Configures shooter controls.
      */
-    private void configureShooterControls() {
-        // R2 = shoot (auto voltage from Limelight distance)
-        joystick.R2().whileTrue(
-            Commands.runEnd(
-                () -> shooter.runShoot(driverAssist.getShooterVoltageFromLimelight()),
-                shooter::stop,
-                shooter
-            )
-        );
+    // private void configureShooterControls() {
+    //     // R2 = shoot (auto voltage from Limelight distance)
+    //     joystick.R2().whileTrue(
+    //         Commands.runEnd(
+    //             () -> shooter.runShoot(driverAssist.getShooterVoltageFromLimelight()),
+    //             shooter::stop,
+    //             shooter
+    //         )
+    //     );
 
-        // L2 = intake
-        joystick.L2().whileTrue(
-            Commands.runEnd(shooter::runIntake, shooter::stop, shooter)
-        );
+    //     // L2 = intake
+    //     joystick.L2().whileTrue(
+    //         Commands.runEnd(shooter::runIntake, shooter::stop, shooter)
+    //     );
 
-        // L1 + Circle = unjam feeder (reverse)
-        joystick.L1().and(joystick.circle()).whileTrue(
-            Commands.runEnd(shooter::runFeedReverse, shooter::stop, shooter)
-        );
+    //     // L1 + Circle = unjam feeder (reverse)
+    //     joystick.L1().and(joystick.circle()).whileTrue(
+    //         Commands.runEnd(shooter::runFeedReverse, shooter::stop, shooter)
+    //     );
 
-        // L1 + Square = unjam intake (reverse)
-        joystick.L1().and(joystick.square()).whileTrue(
-            Commands.runEnd(shooter::runIntakeReverse, shooter::stop, shooter)
-        );
-    }
+    //     // L1 + Square = unjam intake (reverse)
+    //     joystick.L1().and(joystick.square()).whileTrue(
+    //         Commands.runEnd(shooter::runIntakeReverse, shooter::stop, shooter)
+    //     );
+    // }
 
     /**
      * Configures System Identification (SysId) controls.
